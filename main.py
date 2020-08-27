@@ -1,19 +1,26 @@
 import telebot
 import wikipedia
 from telebot import types
-from config import TOKEN
+from configparser import ConfigParser
+from config import TOKEN, LANGUAGE
 
-wikipedia.set_lang('ru')
+wikipedia.set_lang(LANGUAGE)
+
+config = ConfigParser()
+config.read("locale.ini")
+language = config.get("LOCALE", "language") # устанавливаем локаль
+section = language.upper()
+config.read(f"locales/{language}/{language}.ini") # читаем файл строковых данных
+
+GREETINGS = config.get(section, "GREETINGS")
 
 bot = telebot.TeleBot(TOKEN)
-ADMINS = [
-    834035462,
-]
+
 @bot.message_handler(commands=['start','help'])
 def send_welcome(message):
     bot.send_message(
         chat_id=message.chat.id,
-        text='Привет!\nЯ-бот,который поможет тебе найти информацию из Википедии. Чтобы спросить у меня напиши:\n"Что такое <слово>"',)
+        text=GREETINGS,)
 
 
 @bot.message_handler(content_types=['text',])
