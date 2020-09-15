@@ -6,9 +6,7 @@ from config import TOKEN
 wikipedia.set_lang('ru')
 
 bot = telebot.TeleBot(TOKEN)
-ADMINS = [
-    834035462,
-]
+
 @bot.message_handler(commands=['start','help'])
 def send_welcome(message):
     bot.send_message(
@@ -18,9 +16,12 @@ def send_welcome(message):
 
 @bot.message_handler(content_types=['text',])
 def get_word(message):
-    if(message.text.startswith('Что такое',0,9)):
+    message.text = message.text.lower()
+    if(message.text.startswith('что такое',0,9) or message.text.startswith('кто такой',0,9)):
         try:
-            search = wikipedia.page(message.text.replace('Что такое ',''))
+            message.text = message.text.replace('кто такой ','')
+            message.text = message.text.replace('что такое ','')
+            search = wikipedia.page(message.text)
             answer = search.content[:300]
             keyboard = types.InlineKeyboardMarkup()
             button = types.InlineKeyboardButton(
