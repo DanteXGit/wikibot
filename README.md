@@ -1,5 +1,5 @@
 # wikibot
-a bot that searches for information in Wikipedia
+Бот который ищет информацию в Википедии
 nickname: t.me/alisherwikibot
 
 ### Демо:
